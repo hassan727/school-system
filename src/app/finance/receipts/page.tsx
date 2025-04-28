@@ -38,14 +38,14 @@ export default function ReceiptsPage() {
     entity_id: '',
     description: ''
   });
-  
+
   // مرجع للاشتراك في التغييرات في الوقت الحقيقي
   const realtimeSubscriptionRef = useRef<any>(null);
-  
+
   // تحميل البيانات
   useEffect(() => {
     loadReceipts();
-    
+
     // الاشتراك في التغييرات في الوقت الحقيقي
     realtimeSubscriptionRef.current = realtimeService.subscribeToTable(
       { table: 'receipts' },
@@ -54,19 +54,20 @@ export default function ReceiptsPage() {
         loadReceipts();
       }
     );
-    
+
     // تنظيف الاشتراك عند إلغاء تحميل المكون
     return () => {
       if (realtimeSubscriptionRef.current) {
         realtimeService.unsubscribe(realtimeSubscriptionRef.current);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, filters]);
-  
+
   // تحميل السندات
   const loadReceipts = async () => {
     setIsLoading(true);
-    
+
     try {
       const { data, count, error } = await receiptService.getReceipts({
         receipt_type: filters.receipt_type || undefined,
@@ -74,11 +75,11 @@ export default function ReceiptsPage() {
         page: currentPage,
         limit: 10
       });
-      
+
       if (error) {
         throw error;
       }
-      
+
       setReceipts(data || []);
       setTotalCount(count || 0);
     } catch (error) {
@@ -88,7 +89,7 @@ export default function ReceiptsPage() {
       setIsLoading(false);
     }
   };
-  
+
   // فتح مربع حوار إضافة
   const openDialog = () => {
     setFormData({
@@ -99,28 +100,28 @@ export default function ReceiptsPage() {
       entity_id: '',
       description: ''
     });
-    
+
     setIsDialogOpen(true);
   };
-  
+
   // تغيير قيمة الحقل
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  
+
   // تغيير قيمة الفلتر
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFilters(prev => ({ ...prev, [name]: value }));
     setCurrentPage(1);
   };
-  
+
   // حفظ السند
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       // التحقق من صحة البيانات
       if (!formData.receipt_date || !formData.amount || !formData.entity_type || !formData.entity_id) {
@@ -128,7 +129,7 @@ export default function ReceiptsPage() {
         setIsSubmitting(false);
         return;
       }
-      
+
       const receiptData = {
         receipt_date: formData.receipt_date,
         receipt_type: formData.receipt_type,
@@ -137,21 +138,21 @@ export default function ReceiptsPage() {
         entity_id: formData.entity_id,
         description: formData.description
       };
-      
+
       // إنشاء سند جديد
       const result = await receiptService.createReceipt(receiptData);
-      
+
       if (result.error) {
         throw result.error;
       }
-      
+
       // إغلاق مربع الحوار وتحديث القائمة
       setIsDialogOpen(false);
       loadReceipts();
-      
+
       // عرض رسالة نجاح
       showToast('تم إنشاء السند بنجاح', 'success');
-      
+
       // طباعة السند
       if (window.confirm('هل ترغب في طباعة السند؟')) {
         receiptService.printReceipt(result.data);
@@ -163,24 +164,24 @@ export default function ReceiptsPage() {
       setIsSubmitting(false);
     }
   };
-  
+
   // حذف سند
   const handleDelete = async (id: string) => {
     if (!window.confirm('هل أنت متأكد من رغبتك في حذف هذا السند؟')) {
       return;
     }
-    
+
     try {
       const { success, error } = await receiptService.deleteReceipt(id);
-      
+
       if (error) {
         throw error;
       }
-      
+
       if (success) {
         // تحديث القائمة
         loadReceipts();
-        
+
         // عرض رسالة نجاح
         showToast('تم حذف السند بنجاح', 'success');
       }
@@ -189,16 +190,16 @@ export default function ReceiptsPage() {
       showToast('حدث خطأ أثناء حذف السند', 'error');
     }
   };
-  
+
   // طباعة سند
   const handlePrint = async (id: string) => {
     try {
       const { data, error } = await receiptService.getReceiptById(id);
-      
+
       if (error) {
         throw error;
       }
-      
+
       if (data) {
         receiptService.printReceipt(data);
       }
@@ -207,17 +208,17 @@ export default function ReceiptsPage() {
       showToast('حدث خطأ أثناء طباعة السند', 'error');
     }
   };
-  
+
   // الحصول على نص نوع السند
   const getReceiptTypeText = (type: string) => {
     return type === 'income' ? 'سند قبض' : 'سند صرف';
   };
-  
+
   // الحصول على نص نوع الكيان
   const getEntityTypeText = (type: string) => {
     return receiptService.getEntityTypeText(type);
   };
-  
+
   // تنسيق المبلغ بالجنيه المصري
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('ar-EG', {
@@ -226,20 +227,20 @@ export default function ReceiptsPage() {
       maximumFractionDigits: 0
     }).format(amount);
   };
-  
+
   // تنسيق التاريخ
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ar-EG');
   };
-  
+
   // تغيير الصفحة
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-  
+
   // حساب عدد الصفحات
   const pageCount = Math.ceil(totalCount / 10);
-  
+
   return (
     <MainLayout>
       <div className="p-6">
@@ -250,7 +251,7 @@ export default function ReceiptsPage() {
             إنشاء سند جديد
           </Button>
         </div>
-        
+
         <Card className="mb-6">
           <CardHeader>
             <CardTitle>فلترة السندات</CardTitle>
@@ -273,7 +274,7 @@ export default function ReceiptsPage() {
                   ))}
                 </Select>
               </div>
-              
+
               <div>
                 <Label htmlFor="entity_type">نوع الكيان</Label>
                 <Select
@@ -293,7 +294,7 @@ export default function ReceiptsPage() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>قائمة السندات</CardTitle>
@@ -356,7 +357,7 @@ export default function ReceiptsPage() {
                     ))}
                   </TableBody>
                 </Table>
-                
+
                 {/* ترقيم الصفحات */}
                 {pageCount > 1 && (
                   <div className="flex justify-center mt-4">
@@ -369,7 +370,7 @@ export default function ReceiptsPage() {
                       >
                         السابق
                       </Button>
-                      
+
                       {Array.from({ length: pageCount }, (_, i) => i + 1).map((page) => (
                         <Button
                           key={page}
@@ -380,7 +381,7 @@ export default function ReceiptsPage() {
                           {page}
                         </Button>
                       ))}
-                      
+
                       <Button
                         variant="outline"
                         size="sm"
@@ -396,14 +397,14 @@ export default function ReceiptsPage() {
             )}
           </CardContent>
         </Card>
-        
+
         {/* مربع حوار إنشاء سند */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>إنشاء سند جديد</DialogTitle>
             </DialogHeader>
-            
+
             <form onSubmit={handleSubmit}>
               <div className="space-y-4 py-4">
                 <div className="grid grid-cols-1 gap-4">
@@ -423,7 +424,7 @@ export default function ReceiptsPage() {
                       ))}
                     </Select>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="receipt_date">تاريخ السند</Label>
                     <Input
@@ -435,7 +436,7 @@ export default function ReceiptsPage() {
                       required
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="amount">المبلغ (بالجنيه المصري)</Label>
                     <Input
@@ -449,7 +450,7 @@ export default function ReceiptsPage() {
                       required
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="entity_type">نوع الكيان</Label>
                     <Select
@@ -466,7 +467,7 @@ export default function ReceiptsPage() {
                       ))}
                     </Select>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="entity_id">معرف الكيان</Label>
                     <Input
@@ -477,7 +478,7 @@ export default function ReceiptsPage() {
                       required
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="description">الوصف</Label>
                     <Textarea
@@ -490,7 +491,7 @@ export default function ReceiptsPage() {
                   </div>
                 </div>
               </div>
-              
+
               <DialogFooter>
                 <Button
                   type="button"

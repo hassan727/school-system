@@ -33,6 +33,7 @@ const StudentFilters: React.FC<StudentFiltersProps> = ({ onFilter, initialFilter
         supabase.removeChannel(realtimeSubscription);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // تحميل الفصول الدراسية عند تغيير المرحلة الدراسية

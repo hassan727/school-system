@@ -37,14 +37,14 @@ export default function ExpensesPage() {
     receipt_number: '',
     receipt_image_url: ''
   });
-  
+
   // مرجع للاشتراك في التغييرات في الوقت الحقيقي
   const realtimeSubscriptionRef = useRef<any>(null);
-  
+
   // تحميل البيانات
   useEffect(() => {
     loadExpenses();
-    
+
     // الاشتراك في التغييرات في الوقت الحقيقي
     realtimeSubscriptionRef.current = realtimeService.subscribeToTable(
       { table: 'expenses' },
@@ -53,29 +53,30 @@ export default function ExpensesPage() {
         loadExpenses();
       }
     );
-    
+
     // تنظيف الاشتراك عند إلغاء تحميل المكون
     return () => {
       if (realtimeSubscriptionRef.current) {
         realtimeService.unsubscribe(realtimeSubscriptionRef.current);
       }
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
-  
+
   // تحميل المصروفات
   const loadExpenses = async () => {
     setIsLoading(true);
-    
+
     try {
       const { data, count, error } = await expenseService.getExpenses({
         page: currentPage,
         limit: 10
       });
-      
+
       if (error) {
         throw error;
       }
-      
+
       setExpenses(data || []);
       setTotalCount(count || 0);
     } catch (error) {
@@ -85,7 +86,7 @@ export default function ExpensesPage() {
       setIsLoading(false);
     }
   };
-  
+
   // فتح مربع حوار إضافة/تعديل
   const openDialog = (expense?: any) => {
     if (expense) {
@@ -113,21 +114,21 @@ export default function ExpensesPage() {
         receipt_image_url: ''
       });
     }
-    
+
     setIsDialogOpen(true);
   };
-  
+
   // تغيير قيمة الحقل
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  
+
   // حفظ المصروف
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     try {
       // التحقق من صحة البيانات
       if (!formData.expense_date || !formData.amount || !formData.category || !formData.payment_method) {
@@ -135,7 +136,7 @@ export default function ExpensesPage() {
         setIsSubmitting(false);
         return;
       }
-      
+
       const expenseData = {
         expense_date: formData.expense_date,
         amount: parseFloat(formData.amount),
@@ -145,9 +146,9 @@ export default function ExpensesPage() {
         receipt_number: formData.receipt_number,
         receipt_image_url: formData.receipt_image_url
       };
-      
+
       let result;
-      
+
       if (editingExpense) {
         // تحديث مصروف موجود
         result = await expenseService.updateExpense(editingExpense.id, expenseData);
@@ -155,11 +156,11 @@ export default function ExpensesPage() {
         // إنشاء مصروف جديد
         result = await expenseService.createExpense(expenseData);
       }
-      
+
       if (result.error) {
         throw result.error;
       }
-      
+
       // إنشاء سند صرف
       if (result.data && !editingExpense) {
         try {
@@ -171,9 +172,9 @@ export default function ExpensesPage() {
             entity_id: result.data.id,
             description: `مصروف - ${formData.category}: ${formData.description}`
           };
-          
+
           const receiptResult = await receiptService.createReceipt(receiptData);
-          
+
           if (receiptResult.error) {
             console.error('Error creating receipt:', receiptResult.error);
           }
@@ -181,11 +182,11 @@ export default function ExpensesPage() {
           console.error('Error creating receipt:', receiptError);
         }
       }
-      
+
       // إغلاق مربع الحوار وتحديث القائمة
       setIsDialogOpen(false);
       loadExpenses();
-      
+
       // عرض رسالة نجاح
       showToast(
         editingExpense
@@ -200,24 +201,24 @@ export default function ExpensesPage() {
       setIsSubmitting(false);
     }
   };
-  
+
   // حذف مصروف
   const handleDelete = async (id: string) => {
     if (!window.confirm('هل أنت متأكد من رغبتك في حذف هذا المصروف؟')) {
       return;
     }
-    
+
     try {
       const { success, error } = await expenseService.deleteExpense(id);
-      
+
       if (error) {
         throw error;
       }
-      
+
       if (success) {
         // تحديث القائمة
         loadExpenses();
-        
+
         // عرض رسالة نجاح
         showToast('تم حذف المصروف بنجاح', 'success');
       }
@@ -226,21 +227,21 @@ export default function ExpensesPage() {
       showToast('حدث خطأ أثناء حذف المصروف', 'error');
     }
   };
-  
+
   // الحصول على اسم الفئة
   const getCategoryName = (categoryId: string) => {
     const categories = expenseService.getExpenseCategories();
     const category = categories.find(c => c.id === categoryId);
     return category ? category.name : categoryId;
   };
-  
+
   // الحصول على اسم طريقة الدفع
   const getPaymentMethodName = (methodId: string) => {
     const methods = expenseService.getPaymentMethods();
     const method = methods.find(m => m.id === methodId);
     return method ? method.name : methodId;
   };
-  
+
   // تنسيق المبلغ بالجنيه المصري
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('ar-EG', {
@@ -249,20 +250,20 @@ export default function ExpensesPage() {
       maximumFractionDigits: 0
     }).format(amount);
   };
-  
+
   // تنسيق التاريخ
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ar-EG');
   };
-  
+
   // تغيير الصفحة
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
-  
+
   // حساب عدد الصفحات
   const pageCount = Math.ceil(totalCount / 10);
-  
+
   return (
     <MainLayout>
       <div className="p-6">
@@ -273,7 +274,7 @@ export default function ExpensesPage() {
             إضافة مصروف جديد
           </Button>
         </div>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle>قائمة المصروفات</CardTitle>
@@ -334,7 +335,7 @@ export default function ExpensesPage() {
                     ))}
                   </TableBody>
                 </Table>
-                
+
                 {/* ترقيم الصفحات */}
                 {pageCount > 1 && (
                   <div className="flex justify-center mt-4">
@@ -347,7 +348,7 @@ export default function ExpensesPage() {
                       >
                         السابق
                       </Button>
-                      
+
                       {Array.from({ length: pageCount }, (_, i) => i + 1).map((page) => (
                         <Button
                           key={page}
@@ -358,7 +359,7 @@ export default function ExpensesPage() {
                           {page}
                         </Button>
                       ))}
-                      
+
                       <Button
                         variant="outline"
                         size="sm"
@@ -374,7 +375,7 @@ export default function ExpensesPage() {
             )}
           </CardContent>
         </Card>
-        
+
         {/* مربع حوار إضافة/تعديل مصروف */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent>
@@ -383,7 +384,7 @@ export default function ExpensesPage() {
                 {editingExpense ? 'تعديل مصروف' : 'إضافة مصروف جديد'}
               </DialogTitle>
             </DialogHeader>
-            
+
             <form onSubmit={handleSubmit}>
               <div className="space-y-4 py-4">
                 <div className="grid grid-cols-1 gap-4">
@@ -398,7 +399,7 @@ export default function ExpensesPage() {
                       required
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="amount">المبلغ (بالجنيه المصري)</Label>
                     <Input
@@ -412,7 +413,7 @@ export default function ExpensesPage() {
                       required
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="category">الفئة</Label>
                     <Select
@@ -430,7 +431,7 @@ export default function ExpensesPage() {
                       ))}
                     </Select>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="payment_method">طريقة الدفع</Label>
                     <Select
@@ -447,7 +448,7 @@ export default function ExpensesPage() {
                       ))}
                     </Select>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="receipt_number">رقم الإيصال (اختياري)</Label>
                     <Input
@@ -457,7 +458,7 @@ export default function ExpensesPage() {
                       onChange={handleChange}
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="description">الوصف</Label>
                     <Textarea
@@ -470,7 +471,7 @@ export default function ExpensesPage() {
                   </div>
                 </div>
               </div>
-              
+
               <DialogFooter>
                 <Button
                   type="button"
