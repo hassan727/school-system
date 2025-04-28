@@ -1,0 +1,99 @@
+/* أنماط الجدول المشابه لـ Excel */
+.excel-like-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  direction: rtl;
+}
+
+.excel-like-table th {
+  background-color: #f2f2f2;
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.excel-like-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  vertical-align: middle;
+}
+
+.excel-like-table tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.excel-like-table tr:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* أنماط الطباعة */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  
+  .print-section, .print-section * {
+    visibility: visible;
+  }
+  
+  .print-section {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+  
+  .excel-like-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .excel-like-table th, .excel-like-table td {
+    border: 1px solid #000;
+    padding: 8px;
+  }
+  
+  .excel-like-table th {
+    background-color: #f2f2f2;
+  }
+  
+  /* تلوين صفوف الذكور والإناث */
+  .excel-like-table tr.male-row {
+    background-color: rgba(200, 220, 255, 0.3);
+  }
+  
+  .excel-like-table tr.female-row {
+    background-color: rgba(255, 200, 220, 0.3);
+  }
+  
+  /* إعدادات الصفحة */
+  @page {
+    size: landscape;
+    margin: 1cm;
+  }
+  
+  /* إخفاء أزرار الطباعة والتصدير */
+  .no-print {
+    display: none !important;
+  }
+  
+  /* عنوان الطباعة */
+  .print-header {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  /* إحصائيات الطباعة */
+  .print-statistics {
+    margin-top: 20px;
+    border-top: 1px solid #000;
+    padding-top: 10px;
+  }
+}

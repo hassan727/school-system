@@ -1,0 +1,27 @@
+/* إخفاء شريط التمرير مع الحفاظ على وظيفة التمرير */
+
+/* إخفاء شريط التمرير للمتصفحات الحديثة */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+/* إخفاء شريط التمرير لمتصفح Firefox */
+* {
+  scrollbar-width: none;
+}
+
+/* إخفاء شريط التمرير لمتصفح IE */
+* {
+  -ms-overflow-style: none;
+}
+
+/* الحفاظ على وظيفة التمرير */
+.sidebar, 
+.main-content,
+body,
+html {
+  overflow-y: auto;
+  overflow-x: hidden;
+}

@@ -1,0 +1,152 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --blue-dark: #1E3A8A;
+  --blue-medium: #2563EB;
+  --blue-light: #93C5FD;
+  --gold: #F59E0B;
+  --gray-light: #F3F4F6;
+  --white: #FFFFFF;
+  --gray-dark: #111827;
+}
+
+@layer base {
+  html {
+    direction: rtl;
+  }
+
+  body {
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+  }
+
+  /* تخصيص السكرول بار */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-blue-800/50 rounded-full;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-blue-800;
+  }
+
+  /* إخفاء السكرول بار مع الاحتفاظ بالوظيفة */
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}
+
+@layer components {
+  /* تخصيص السايدبار */
+  .sidebar-pinned {
+    @apply w-64;
+  }
+
+  /* تأثيرات الانتقال */
+  .fade-in {
+    @apply transition-opacity duration-300 ease-in-out opacity-100;
+  }
+
+  .fade-out {
+    @apply transition-opacity duration-300 ease-in-out opacity-0;
+  }
+
+  /* تأثيرات الأزرار */
+  .btn-hover-effect {
+    @apply transition-all duration-300 hover:shadow-md hover:translate-y-[-2px];
+  }
+
+  /* تأثيرات البطاقات */
+  .card-hover-effect {
+    @apply transition-all duration-300 hover:shadow-lg hover:translate-y-[-3px];
+  }
+
+  /* تأثيرات الجداول */
+  .table-row-hover {
+    @apply transition-colors duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20;
+  }
+
+  /* تأثيرات الروابط */
+  .link-hover-effect {
+    @apply transition-all duration-200 hover:text-blue-600 dark:hover:text-blue-400;
+  }
+
+  /* تأثيرات الأيقونات */
+  .icon-hover-effect {
+    @apply transition-transform duration-200 hover:scale-110;
+  }
+
+  /* تأثيرات النماذج */
+  .form-focus-effect {
+    @apply transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+  }
+
+  /* تأثيرات السايدبار */
+  .sidebar-item-hover {
+    @apply transition-all duration-300 hover:bg-blue-800/60 hover:translate-x-1;
+  }
+
+  .sidebar-item-active {
+    @apply bg-blue-dark text-white shadow-md;
+  }
+
+  .sidebar-item-inactive {
+    @apply text-gray-100 hover:bg-blue-800/60 hover:translate-x-1;
+  }
+
+  .sidebar-arrow {
+    @apply w-5 h-5 transition-transform duration-300 bg-blue-800/40 rounded-full flex items-center justify-center;
+  }
+
+  .sidebar-arrow-icon {
+    @apply w-4 h-4;
+  }
+
+  .sidebar-tooltip {
+    @apply absolute right-full top-0 mr-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 bg-blue-dark text-white py-2 px-3 rounded-md shadow-lg whitespace-nowrap;
+  }
+}
+
+/* تخصيص الخطوط */
+@font-face {
+  font-family: 'Tajawal';
+  src: url('/fonts/Tajawal-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('/fonts/Tajawal-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Tajawal';
+  src: url('/fonts/Tajawal-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* تطبيق الخط على كل العناصر */
+* {
+  font-family: 'Tajawal', sans-serif;
+}

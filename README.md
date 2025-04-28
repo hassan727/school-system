@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# نظام إدارة المدرسة
 
-## Getting Started
+نظام إدارة مدرسة عربي شامل مبني باستخدام Next.js وTypeScript وSupabase.
 
-First, run the development server:
+## الميزات
+
+- إدارة الطلاب (إضافة، تعديل، حذف، عرض)
+- إدارة الفصول الدراسية
+- إدارة المالية (الرسوم، الخصومات، الأقساط)
+- التقارير والإحصائيات
+- استيراد وتصدير البيانات (Excel, PDF)
+- واجهة مستخدم عربية كاملة مع دعم RTL
+
+## التقنيات المستخدمة
+
+- **الواجهة الأمامية**: Next.js 15+, React, TypeScript, Tailwind CSS
+- **قاعدة البيانات**: Supabase (PostgreSQL)
+- **إدارة الحالة**: Zustand
+- **التزامن في الوقت الحقيقي**: Supabase Realtime
+
+## البنية التقنية
+
+### الديناميكية والترابط
+
+تم تصميم النظام ليكون ديناميكيًا بالكامل مع ترابط وتزامن بين جميع الأقسام:
+
+1. **التزامن في الوقت الحقيقي**:
+   - استخدام Supabase Realtime للاستماع للتغييرات في قاعدة البيانات
+   - تحديث واجهة المستخدم تلقائيًا عند حدوث أي تغيير
+
+2. **مشاركة البيانات بين المكونات**:
+   - استخدام Zustand لإدارة حالة التطبيق
+   - مشاركة البيانات بين الصفحات والمكونات المختلفة
+
+3. **الترابط بين الأقسام**:
+   - تحديث جميع الأقسام المرتبطة عند تغيير أي بيانات
+   - عرض إشعارات للمستخدم عند حدوث أي تغيير
+
+## بدء الاستخدام
+
+1. تثبيت التبعيات:
+
+```bash
+npm install
+```
+
+2. تشغيل خادم التطوير:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. فتح [http://localhost:3000](http://localhost:3000) في المتصفح.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## هيكل المشروع
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+├── app/                  # صفحات التطبيق (Next.js App Router)
+├── components/           # مكونات React
+├── lib/                  # مكتبات وأدوات مساعدة
+├── services/             # خدمات التطبيق (API, Supabase)
+└── types/                # تعريفات TypeScript
+```
 
-## Learn More
+## الخدمات الرئيسية
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **studentService**: إدارة بيانات الطلاب
+- **classroomService**: إدارة الفصول الدراسية
+- **installmentService**: إدارة الأقساط والمدفوعات
+- **exportService**: تصدير البيانات إلى Excel
+- **realtimeService**: التزامن في الوقت الحقيقي
+- **sharedDataService**: مشاركة البيانات بين المكونات
