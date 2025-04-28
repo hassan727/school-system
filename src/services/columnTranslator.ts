@@ -89,8 +89,10 @@ export function translateValue(arabicValue: string): string {
   return arabicValue;
 }
 
-export default {
+const columnTranslator = {
   arabicToEnglishColumnMap,
   translateColumnName,
   translateValue
 };
+
+export default columnTranslator;

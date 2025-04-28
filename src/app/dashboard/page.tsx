@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { supabase } from '@/lib/supabase';
-import { formatCurrency } from '@/lib/utils';
+// import { formatCurrency } from '@/lib/utils'; // غير مستخدم
 import {
   DashboardHeader,
   DashboardStats,
