@@ -44,7 +44,7 @@ export const getExpensesData = (): ChartData<'bar'> => ({
       backgroundColor: 'rgba(220, 38, 38, 0.2)',
       borderColor: 'rgba(220, 38, 38, 0.7)',
       borderWidth: 1,
-      borderDash: [5, 5],
+      // borderDash: [5, 5], // تم إزالتها لأنها غير متوافقة مع مخططات الأعمدة
     }
   ],
 });
