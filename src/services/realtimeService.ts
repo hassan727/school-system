@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase';
 export type RealtimeEvent = 'INSERT' | 'UPDATE' | 'DELETE' | '*';
 
 // تعريف أنواع الجداول
-export type TableName = 'students' | 'classrooms' | 'stages' | 'payments' | 'installments';
+export type TableName = 'students' | 'classrooms' | 'stages' | 'payments' | 'installments' | 'expenses' | 'receipts';
 
 // تعريف نوع الاشتراك
 export interface SubscriptionOptions {
