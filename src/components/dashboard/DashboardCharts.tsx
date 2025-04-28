@@ -5,33 +5,9 @@ import { ChartCard } from '@/components/dashboard';
 import { ChartData, ChartOptions } from 'chart.js';
 
 interface DashboardChartsProps {
-  revenueData: {
-    labels: string[];
-    datasets: {
-      label: string;
-      data: number[];
-      backgroundColor: string;
-      borderColor: string;
-    }[];
-  };
-  expensesData: {
-    labels: string[];
-    datasets: {
-      label: string;
-      data: number[];
-      backgroundColor: string;
-      borderColor: string;
-    }[];
-  };
-  distributionData: {
-    labels: string[];
-    datasets: {
-      label: string;
-      data: number[];
-      backgroundColor: string[];
-      borderColor: string[];
-    }[];
-  };
+  revenueData: ChartData<'line'>;
+  expensesData: ChartData<'bar'>;
+  distributionData: ChartData<'doughnut'>;
   isLoading?: boolean;
 }
 
@@ -65,8 +41,8 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
               label += ': ';
             }
             if (context.parsed.y !== null) {
-              label += new Intl.NumberFormat('ar-EG', { 
-                style: 'currency', 
+              label += new Intl.NumberFormat('ar-EG', {
+                style: 'currency',
                 currency: 'EGP',
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
@@ -87,8 +63,8 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
         beginAtZero: true,
         ticks: {
           callback: function(value) {
-            return new Intl.NumberFormat('ar-EG', { 
-              style: 'currency', 
+            return new Intl.NumberFormat('ar-EG', {
+              style: 'currency',
               currency: 'EGP',
               minimumFractionDigits: 0,
               maximumFractionDigits: 0
@@ -123,8 +99,8 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
               label += ': ';
             }
             if (context.parsed.y !== null) {
-              label += new Intl.NumberFormat('ar-EG', { 
-                style: 'currency', 
+              label += new Intl.NumberFormat('ar-EG', {
+                style: 'currency',
                 currency: 'EGP',
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0
@@ -145,8 +121,8 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
         beginAtZero: true,
         ticks: {
           callback: function(value) {
-            return new Intl.NumberFormat('ar-EG', { 
-              style: 'currency', 
+            return new Intl.NumberFormat('ar-EG', {
+              style: 'currency',
               currency: 'EGP',
               minimumFractionDigits: 0,
               maximumFractionDigits: 0
@@ -178,8 +154,8 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
               label += ': ';
             }
             if (context.parsed !== null) {
-              label += new Intl.NumberFormat('ar-EG', { 
-                style: 'percent', 
+              label += new Intl.NumberFormat('ar-EG', {
+                style: 'percent',
                 minimumFractionDigits: 1,
                 maximumFractionDigits: 1
               }).format(context.parsed / 100);
@@ -201,7 +177,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
         isLoading={isLoading}
         filters={['الأسبوع', 'الشهر', 'الربع', 'العام']}
       />
-      
+
       <ChartCard
         title="المصروفات الشهرية"
         chartType="bar"
@@ -210,7 +186,7 @@ const DashboardCharts: React.FC<DashboardChartsProps> = ({
         isLoading={isLoading}
         filters={['الأسبوع', 'الشهر', 'الربع', 'العام']}
       />
-      
+
       <ChartCard
         title="توزيع المصروفات"
         chartType="doughnut"
