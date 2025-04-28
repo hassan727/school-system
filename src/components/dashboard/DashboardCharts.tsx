@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { ChartCard } from '@/components/dashboard';
-import { ChartData, ChartOptions } from 'chart.js';
+import { ChartOptions } from 'chart.js';
+import { TypedChartData } from '@/app/dashboard/data/dashboardData';
 
 interface DashboardChartsProps {
-  revenueData: ChartData<'line'>;
-  expensesData: ChartData<'bar'>;
-  distributionData: ChartData<'doughnut'>;
+  revenueData: TypedChartData<'line'>;
+  expensesData: TypedChartData<'bar'>;
+  distributionData: TypedChartData<'doughnut'>;
   isLoading?: boolean;
 }
 

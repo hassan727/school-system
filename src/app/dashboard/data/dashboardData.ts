@@ -1,8 +1,13 @@
 // بيانات تجريبية للوحة التحكم
 import { ChartData } from 'chart.js';
 
+// تعريف نوع مخصص للرسوم البيانية مع ضمان أن labels دائمًا من نوع string[]
+export type TypedChartData<T extends 'line' | 'bar' | 'doughnut'> = Omit<ChartData<T>, 'labels'> & {
+  labels: string[];
+};
+
 // بيانات الإيرادات
-export const getRevenueData = (): ChartData<'line'> => ({
+export const getRevenueData = (): TypedChartData<'line'> => ({
   labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
   datasets: [
     {
@@ -28,7 +33,7 @@ export const getRevenueData = (): ChartData<'line'> => ({
 });
 
 // بيانات المصروفات
-export const getExpensesData = (): ChartData<'bar'> => ({
+export const getExpensesData = (): TypedChartData<'bar'> => ({
   labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو'],
   datasets: [
     {
@@ -50,7 +55,7 @@ export const getExpensesData = (): ChartData<'bar'> => ({
 });
 
 // بيانات توزيع المصروفات
-export const getDistributionData = (): ChartData<'doughnut'> => ({
+export const getDistributionData = (): TypedChartData<'doughnut'> => ({
   labels: ['الرواتب', 'المرافق', 'الصيانة', 'المستلزمات', 'التطوير', 'أخرى'],
   datasets: [
     {
