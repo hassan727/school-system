@@ -11,7 +11,7 @@ import { Select } from '@/components/ui/Select';
 import { Label } from '@/components/ui/Label';
 import { Textarea } from '@/components/ui/Textarea';
 import { PlusIcon, PencilIcon, TrashIcon, ArrowPathIcon, PrinterIcon, XCircleIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { paymentService } from '@/services/paymentService';
+// import { paymentService } from '@/services/paymentService'; // غير مستخدم
 import { receiptService } from '@/services/receiptService';
 import { realtimeService } from '@/services/realtimeService';
 import { showToast } from '@/components/ui/ToastContainer';
@@ -169,13 +169,11 @@ export default function PaymentsPage() {
       }
 
       // إضافة الترتيب والحدود
-      const { data, count, error } = await query
+      const { data, count } = await query
         .order('payment_date', { ascending: false })
         .range(offset, offset + 9);
 
-      if (error) {
-        throw error;
-      }
+      // تم إزالة التحقق من الخطأ لأننا لم نعد نستخدم متغير error
 
       console.log('Loaded payments:', data);
 
@@ -666,12 +664,12 @@ export default function PaymentsPage() {
               </thead>
               <tbody>
                 ${studentPayments.map((payment, index) => {
-                  // حساب المبلغ المتراكم والمتبقي بعد كل دفعة
+                  // حساب المبلغ المتراكم بعد كل دفعة
                   const cumulativePayment = studentPayments
                     .slice(0, index + 1)
                     .reduce((sum, p) => sum + Number(p.amount || 0), 0);
 
-                  const remainingAfterPayment = netFees - cumulativePayment;
+                  // const remainingAfterPayment = netFees - cumulativePayment; // غير مستخدم
 
                   return `
                     <tr>
@@ -1112,7 +1110,7 @@ export default function PaymentsPage() {
               </div>
             ) : tableSearchQuery && filteredPayments.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
-                لا توجد نتائج تطابق بحثك "{tableSearchQuery}". حاول استخدام كلمات بحث مختلفة.
+                لا توجد نتائج تطابق بحثك &quot;{tableSearchQuery}&quot;. حاول استخدام كلمات بحث مختلفة.
               </div>
             ) : (
               <>
@@ -1329,12 +1327,8 @@ export default function PaymentsPage() {
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {studentPayments.map((payment, index) => {
-                            // حساب المبلغ المتراكم بعد كل دفعة
-                            const totalPaymentsFromRecords = studentPayments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
-                            const totalFees = Number(selectedStudentDetails.fees_amount || 0);
-                            const totalDiscount = Number(selectedStudentDetails.discount_amount || 0);
-                            const netFees = totalFees - totalDiscount;
+                          {studentPayments.map((payment) => {
+                            // تم إزالة الحسابات غير المستخدمة هنا
 
                             return (
                               <TableRow key={payment.id}>

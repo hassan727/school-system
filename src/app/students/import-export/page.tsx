@@ -260,7 +260,7 @@ export default function ImportExportPage() {
               <ul className="list-disc list-inside mt-2 text-sm text-gray-600 dark:text-gray-400 mr-4">
                 <li>تأكد من استقرار اتصالك بالإنترنت قبل بدء عملية الاستيراد</li>
                 <li>قم باستيراد عدد قليل من الطلاب في كل مرة (10-20 طالب) لتجنب انقطاع الاتصال</li>
-                <li>إذا واجهت خطأ "Unchecked runtime.lastError"، فهذا يشير إلى مشكلة في الاتصال وليس في البيانات نفسها</li>
+                <li>إذا واجهت خطأ &quot;Unchecked runtime.lastError&quot;، فهذا يشير إلى مشكلة في الاتصال وليس في البيانات نفسها</li>
                 <li>في حالة ظهور أخطاء متعلقة بالاتصال، انتظر قليلاً ثم حاول مرة أخرى</li>
               </ul>
             </div>
