@@ -12,17 +12,15 @@ import { Student, UpdateStudentInput } from '@/types/student';
 import studentService from '@/services/studentService';
 
 interface EditStudentPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function EditStudentPage({ params }: EditStudentPageProps) {
+export default async function EditStudentPage({ params }: EditStudentPageProps) {
   const router = useRouter();
-  // استخدام React.use() لفك تغليف params
-  // Nota: En Next.js 15.x, params ya es un objeto, pero en versiones futuras será una Promise
-  // Por ahora, podemos acceder directamente a params.id, pero estamos preparando el código para el futuro
-  const id = params.id;
+  // استخدام await لفك تغليف params لأنه Promise في Next.js
+  const { id } = await params;
 
   const [student, setStudent] = useState<Student | null>(null);
   const [isLoading, setIsLoading] = useState(true);
