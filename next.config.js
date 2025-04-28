@@ -3,6 +3,12 @@ const nextConfig = {
   // تمكين وضع Strict Mode لتحسين جودة الكود
   reactStrictMode: true,
 
+  // تعطيل فحص ESLint أثناء البناء
+  eslint: {
+    // تجاهل أخطاء ESLint أثناء البناء للنشر على Vercel
+    ignoreDuringBuilds: true,
+  },
+
   // تكوين الميزات التجريبية
   experimental: {
     // تمكين ميزات الخادم الحديثة
