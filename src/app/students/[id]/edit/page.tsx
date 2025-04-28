@@ -1,137 +1,38 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense } from 'react';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import React from 'react';
-import MainLayout from '@/components/layout/MainLayout';
-import StudentForm from '@/components/students/StudentForm';
-import { Button } from '@/components/ui/Button';
-import Spinner from '@/components/ui/Spinner';
-import { Student, UpdateStudentInput } from '@/types/student';
-import studentService from '@/services/studentService';
+import EditStudentClient from '@/components/students/EditStudentClient';
+import { Spinner } from '@/components/ui/Spinner';
 
-interface EditStudentPageProps {
-  params: Promise<{
-    id: string;
-  }>;
-}
+export default function EditStudentPage() {
+  // استخدام useParams للحصول على المعرف بشكل آمن
+  const params = useParams();
+  const id = params?.id as string;
 
-export default async function EditStudentPage({ params }: EditStudentPageProps) {
-  const router = useRouter();
-  // استخدام await لفك تغليف params لأنه Promise في Next.js
-  const { id } = await params;
-
-  const [student, setStudent] = useState<Student | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  // تحميل بيانات الطالب
-  useEffect(() => {
-    loadStudent();
-  }, [id]);
-
-  // تحميل بيانات الطالب من الخادم
-  const loadStudent = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const { data, error } = await studentService.getStudentById(id);
-
-      if (error) {
-        console.error('Error loading student:', error);
-        setError('حدث خطأ أثناء تحميل بيانات الطالب');
-        return;
-      }
-
-      if (!data) {
-        setError('لم يتم العثور على الطالب');
-        return;
-      }
-
-      setStudent(data);
-    } catch (error) {
-      console.error('Error loading student:', error);
-      setError('حدث خطأ أثناء تحميل بيانات الطالب');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // معالجة تحديث بيانات الطالب
-  const handleSubmit = async (formData: UpdateStudentInput) => {
-    setIsSubmitting(true);
-    try {
-      const updateData: UpdateStudentInput = {
-        ...formData,
-        id,
-      };
-
-      const { error } = await studentService.updateStudent(updateData);
-
-      if (error) {
-        console.error('Error updating student:', error);
-        alert('حدث خطأ أثناء تحديث بيانات الطالب');
-        return;
-      }
-
-      // التوجيه إلى صفحة تفاصيل الطالب
-      router.push(`/students/${id}`);
-    } catch (error) {
-      console.error('Error updating student:', error);
-      alert('حدث خطأ أثناء تحديث بيانات الطالب');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  if (isLoading) {
+  // التحقق من وجود المعرف
+  if (!id) {
     return (
-      <MainLayout>
-        <div className="flex justify-center items-center h-[calc(100vh-100px)]">
-          <Spinner size="lg" />
-        </div>
-      </MainLayout>
-    );
-  }
-
-  if (error || !student) {
-    return (
-      <MainLayout>
-        <div className="p-3">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
-            <p className="text-lg text-gray-600 dark:text-gray-400 mb-4">{error || 'لم يتم العثور على الطالب'}</p>
-            <Link href="/students">
-              <Button variant="primary">
-                العودة إلى قائمة الطلاب
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </MainLayout>
-    );
-  }
-
-  return (
-    <MainLayout>
-      <div className="p-3">
-        <div className="flex items-center mb-6">
-          <Link href={`/students/${id}`}>
-            <Button variant="outline" size="sm">
-              العودة إلى تفاصيل الطالب
-            </Button>
+      <div className="flex justify-center items-center h-screen">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center">
+          <p className="text-red-500 mb-4">خطأ: لم يتم تحديد معرف الطالب</p>
+          <Link href="/students" className="text-blue-500 hover:underline">
+            العودة إلى قائمة الطلاب
           </Link>
-          <h1 className="text-2xl font-bold mr-4">تعديل بيانات الطالب</h1>
         </div>
-
-        <StudentForm
-          student={student}
-          onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
-        />
       </div>
-    </MainLayout>
+    );
+  }
+
+  // استخدام Suspense لتحميل المكون بشكل آمن
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center items-center h-screen">
+        <Spinner size="lg" />
+      </div>
+    }>
+      <EditStudentClient id={id} />
+    </Suspense>
   );
 }
